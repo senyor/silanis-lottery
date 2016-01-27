@@ -1,0 +1,22 @@
+group 'andrei.kuziakov'
+version '0.1'
+
+apply plugin: 'java'
+//apply plugin: 'application'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'com.silanis.lottery.Application'
+    }
+}
