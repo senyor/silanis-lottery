@@ -1,6 +1,5 @@
 package com.silanis.lottery;
 
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -23,19 +22,18 @@ public class CommandProcessor {
 
     public void process() {
 
-        while (true) {
-            Scanner userInput = new Scanner(System.in);
+        Scanner userInput = new Scanner(System.in);
 
+        while (true) {
             System.out.printf("Please enter command (%s, %s, %s, %s):\n> ",
                     COMMAND_PURCHASE, COMMAND_DRAW, COMMAND_WINNERS, COMMAND_QUIT);
 
-            String command = "";
-
-            try {
-                command = userInput.next();
-            } catch (NoSuchElementException ignored) {
-
+            if (!userInput.hasNext()) {
+                System.out.println("Abnormal input. Exiting.");
+                System.exit(1);
             }
+
+            String command = userInput.nextLine();
 
             System.out.printf("Entered command \"%s\"\n", command);
 

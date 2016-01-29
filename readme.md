@@ -35,12 +35,10 @@ be executed with the commands “purchase”, “draw” and “winners”.
 Upon launching the program, you can initialize the pot with 200$. The program does not need to store information 
 on disk nor in a database. You can round or truncate amounts to the nearest dollar value.
 
-<strong>Run</strong>
+<strong>How to run application</strong>
 
 Build and run an application
 in Linux or Mac OS:
-<pre style="font-family: Lucida Console">./gradlew build
-java -jar build/libs/silanis-lottery-0.1.jar</pre>
+<pre style="font-family: Lucida Console">./gradlew run -q</pre>
 in Windows:
-<pre style="font-family: Lucida Console">gradle.bat build
-java -jar build\libs\silanis-lottery-0.1.jar</pre>
+<pre style="font-family: Lucida Console">gradle.bat run -q</pre>
