@@ -87,6 +87,37 @@ public class SilanisLotteryTest {
     }
 
     @Test
+    public void testOneTicketDraw() {
+        lottery.restart();
+
+        // iterate 3 times max number of balls
+        int i = MAX_NUMBER * 3;
+
+        do {
+            int potAmount = lottery.getPotAmount();
+
+            // try to buy 1 ticket
+            lottery.purchase("andrew1");
+
+            assertEquals(potAmount + TICKET_COST, lottery.getPotAmount());
+
+            assertTrue(lottery.isSaleStart());
+            assertFalse(lottery.isSaleComplete());
+
+            lottery.draw();
+
+            assertTrue(lottery.isDrawPerformed());
+
+            if (lottery.getWinAmount() == 0) {
+                assertEquals(potAmount + TICKET_COST, lottery.getPotAmount());
+            } else {
+                assertEquals(potAmount + TICKET_COST - lottery.getWinAmount(), lottery.getPotAmount());
+            }
+            i--;
+        } while (i > 0);
+    }
+
+    @Test
     public void testDraw() {
 
         lottery.restart();

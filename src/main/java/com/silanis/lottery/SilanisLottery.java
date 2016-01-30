@@ -61,18 +61,15 @@ public class SilanisLottery implements Lottery {
         winners.clear();
         Collections.shuffle(balls, new Random());
 
-        potWinAmount = round(potAmount * 0.5);
-
-        double targetPotAmount = (float) (potAmount) * 0.5;
+        double targetWinAmount = potAmount * 0.5;
         double finalWinAmount = 0;
 
         for (int i = 0; i < BALLS_TO_DRAW; i++) {
-            double amount = getWinAmount() * WIN_RATIO[i];
+            double amount = targetWinAmount * WIN_RATIO[i];
             String winner = purchasedTickets.get(balls.get(i));
 
             // get funds from the pot for each winner
             if (winner != null) {
-                targetPotAmount -= amount;
                 finalWinAmount += amount;
                 winners.add(String.format("%s: %d$", winner, round(amount)));
             } else {
@@ -81,8 +78,12 @@ public class SilanisLottery implements Lottery {
         }
 
         // recalculated win amount due to each winner
-        potAmount = round(targetPotAmount);
         potWinAmount = round(finalWinAmount);
+
+        if (potAmount < potWinAmount) {
+            throw new IllegalArgumentException("Pot amount is less then winners amount. Possible rounding problem.");
+        }
+        potAmount -= potWinAmount;
 
         initSequence();
     }
