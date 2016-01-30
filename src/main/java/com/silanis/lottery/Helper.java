@@ -5,6 +5,8 @@ import java.util.stream.IntStream;
 
 /**
  * Helper class to perform various operations
+ *
+ * @author Andrei Kuziakov
  */
 public class Helper {
 

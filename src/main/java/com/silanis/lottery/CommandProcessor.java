@@ -1,6 +1,9 @@
 package com.silanis.lottery;
 
-import java.util.Scanner;
+import com.silanis.lottery.command.Command;
+
+import static com.silanis.lottery.InputHandler.getInputString;
+import static com.silanis.lottery.OutputHandler.*;
 
 /**
  * Interact with user and perform actions
@@ -9,11 +12,6 @@ import java.util.Scanner;
  */
 public class CommandProcessor {
 
-    public static final String COMMAND_PURCHASE = "purchase";
-    public static final String COMMAND_DRAW = "draw";
-    public static final String COMMAND_WINNERS = "winners";
-    public static final String COMMAND_QUIT = "quit";
-
     private Lottery lottery;
 
     public CommandProcessor(Lottery lottery) {
@@ -21,55 +19,21 @@ public class CommandProcessor {
     }
 
     public void process() {
-
-        Scanner userInput = new Scanner(System.in);
+        CommandFactory commandFactory = new CommandFactory(lottery);
 
         while (true) {
-            System.out.printf("Please enter command (%s, %s, %s, %s):\n> ",
-                    COMMAND_PURCHASE, COMMAND_DRAW, COMMAND_WINNERS, COMMAND_QUIT);
+            addMessage(String.format("Please enter command %s:\n> ", commandFactory.getCommands()));
 
-            if (!userInput.hasNext()) {
-                System.out.println("Abnormal input. Exiting.");
+            if (!InputHandler.getUserInput().hasNext()) {
+                InputHandler.closeInput();
+                addErrorMessage("Abnormal input. Exiting.");
                 System.exit(1);
             }
+            String userCommand = getInputString().trim();
+            addMessage(String.format("Entered command \"%s\"\n", userCommand));
 
-            String command = userInput.nextLine();
-
-            System.out.printf("Entered command \"%s\"\n", command);
-
-            switch (command) {
-                case COMMAND_PURCHASE:
-                    if (lottery.isSaleComplete()) {
-                        System.out.println("Sorry, but no more tickets left for purchase!");
-                    } else {
-                        System.out.print("Enter your name: ");
-                        String name = userInput.next();
-                        int ticketNumber = lottery.purchase(name);
-                        System.out.printf("Ticket %d purchased by %s\n", ticketNumber, name);
-                    }
-                    break;
-                case COMMAND_DRAW:
-                    if (lottery.isSaleStart()) {
-                        lottery.draw();
-                        System.out.printf("Pot amount left after draw is %d$\n", lottery.getPotAmount());
-                    } else {
-                        System.out.println("No tickets purchased, please buy at least one before draw!");
-                    }
-                    break;
-                case COMMAND_WINNERS:
-                    if (lottery.isDrawPerformed()) {
-                        System.out.println(lottery.winners());
-                    } else {
-                        System.out.println("No draws performed yet!");
-                    }
-                    break;
-                case COMMAND_QUIT:
-                    System.out.println("\nGood to see you! Bye!");
-                    System.exit(0);
-                    break;
-                default:
-                    System.out.println("Unknown command, please try again!");
-            }
+            Command command = commandFactory.getCommand(userCommand);
+            command.execute();
         }
     }
 }
